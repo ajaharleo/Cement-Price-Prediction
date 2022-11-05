@@ -1,9 +1,10 @@
 import os,sys
 import logging
+from CementStrength.constants import *
 
-logging_str = "[%(asctime)s: %(levelname)s: %(module)s]: %(message)s"
+logging_str = "[%(asctime)s: %(levelname)s: %(module)s:%(lineno)d:%(filename)s:%(funcName)s]: %(message)s"
 log_dir = "logs"
-log_filepath = os.path.join(log_dir, "running_logs.log")
+log_filepath = os.path.join(log_dir, f"log_{get_current_time_stamp()}.log")
 os.makedirs(log_dir, exist_ok=True)
 
 logging.basicConfig(
@@ -11,7 +12,7 @@ logging.basicConfig(
     format=logging_str,
     handlers=[
         logging.FileHandler(log_filepath),
-        logging.StreamHandler(sys.stdout),
+        logging.StreamHandler(sys.stdout)
     ])
 
 logger = logging.getLogger("CementStrengthLogger")
