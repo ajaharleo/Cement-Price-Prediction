@@ -1,6 +1,6 @@
 from CementStrength.constants import * 
 from CementStrength.utils import *
-from CementStrength.entity import DataIngestionConfig,DataValidationConfig
+from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig
 from pathlib import Path
 import os
 from CementStrength import logger
@@ -63,3 +63,32 @@ class Configuration:
                                                         report_page_file_path=report_page_file_path)
         logger.info(f"DataValidationConfig: {data_validation_config}")
         return data_validation_config
+
+    def get_data_transformation_config(self)-> DataTransformationConfig:
+        try:
+            artifact_dir = self.artifact_dir
+            data_transformation_info = self.config_info[DATA_TRANSFORMATION_CONFIG_KEY]
+            data_transformation_artifact_dir = os.path.join(artifact_dir,
+                                            DATA_TRANSFORMATION_ARTIFACT_DIR,
+                                            self.time_stamp)
+            transformed_dir = os.path.join(
+                            data_transformation_artifact_dir,
+                            data_transformation_info[DATA_TRANSFORMATION_TRANSFORMED_DIR_KEY])
+            transformed_train_dir = Path(os.path.join(
+                                    transformed_dir,
+                                    data_transformation_info[DATA_TRANSFORMATION_TRANSFORMED_TRAIN_DIR_KEY]))
+            transformed_test_dir = Path(os.path.join(
+                                transformed_dir,
+                                data_transformation_info[DATA_TRANSFORMATION_TRANSFORMED_TEST_DIR_KEY]))
+            preprocessed_object_file_path = Path(os.path.join(
+                                            data_transformation_artifact_dir,
+                                            data_transformation_info[DATA_TRANSFORMATION_PREPROCESSING_DIR_KEY],
+                                            data_transformation_info[DATA_TRANSFORMATION_PREPROCESSED_OBJECT_FILE_NAME_KEY]))
+            data_transformation_config = DataTransformationConfig(
+                                        transformed_train_dir= transformed_train_dir,
+                                        transformed_test_dir= transformed_test_dir,
+                                        preprocessed_object_file_path= preprocessed_object_file_path)
+            logger.info(f"DataTransformationConfig: {data_transformation_config}")
+            return data_transformation_config
+        except Exception as e:
+            logger.exception(e)

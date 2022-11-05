@@ -17,3 +17,11 @@ class DataValidationArtifact:
     report_page_file_path: Path
     is_validated: bool
     message: str
+
+@dataclass(frozen=True)
+class DataTransformationArtifact:
+    transformed_train_file_path: Path
+    transformed_test_file_path: Path
+    preprocessed_object_file_path: Path
+    is_transformed: bool
+    message: str
