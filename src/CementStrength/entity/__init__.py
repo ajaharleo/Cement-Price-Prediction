@@ -1,1 +1,2 @@
-from CementStrength.entity.config_entity import (DataIngestionConfig)
+from CementStrength.entity.config_entity import (DataIngestionConfig,DataValidationConfig)
+from CementStrength.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact)
