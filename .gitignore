@@ -130,3 +130,7 @@ dmypy.json
 
 # VS code
 .vscode
+
+#training csv file
+*.csv
+*.db

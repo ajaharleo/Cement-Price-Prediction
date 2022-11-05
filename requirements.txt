@@ -5,6 +5,7 @@ Click==7.0
 colorhash==1.0.2
 configparser==4.0.2
 cycler==0.10.0
+evidently
 Flask==1.1.1
 Flask-Cors==3.0.8
 Flask-MonitoringDashboard==3.0.6
@@ -50,4 +51,5 @@ types-PyYAML
 scipy
 sqlite3
 mlflow==1.26.1
+ipykernel
 -e .
