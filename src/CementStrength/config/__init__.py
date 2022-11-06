@@ -1,6 +1,6 @@
 from CementStrength.constants import * 
 from CementStrength.utils import *
-from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig
+from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig
 from pathlib import Path
 import os
 from CementStrength import logger
@@ -90,5 +90,27 @@ class Configuration:
                                         preprocessed_object_file_path= preprocessed_object_file_path)
             logger.info(f"DataTransformationConfig: {data_transformation_config}")
             return data_transformation_config
+        except Exception as e:
+            logger.exception(e)
+
+    def get_model_trainer_config(self)-> ModelTrainerConfig:
+        try:
+            artifact_dir = self.artifact_dir
+            model_trainer_info = self.config_info[MODEL_TRAINER_CONFIG_KEY]
+            model_trainer_artifact_dir = os.path.join(artifact_dir,
+                                        MODEL_TRAINER_ARTIFACT_DIR,
+                                        self.time_stamp)
+            trained_model_file_path = os.path.join(model_trainer_artifact_dir,
+                                model_trainer_info[MODEL_TRAINER_TRAINED_MODEL_DIR_KEY],
+                                model_trainer_info[MODEL_TRAINER_MODEL_FILE_NAME_KEY])
+            base_accuracy = model_trainer_info[MODEL_TRAINER_BASE_ACCURACY_KEY]
+            model_config_file_path = os.path.join(model_trainer_info[MODEL_TRAINER_MODEL_CONFIG_DIR_NAME_KEY],
+                                                    model_trainer_info[MODEL_TRAINER_MODEL_CONFIG_FILE_NAME_KEY])
+            model_trainer_config = ModelTrainerConfig(
+                                    trained_model_file_path= trained_model_file_path,
+                                    base_accuracy= base_accuracy,
+                                    model_config_file_path=model_config_file_path)
+            logger.info(f"Model Trainer Config: {model_trainer_config}")
+            return model_trainer_config                 
         except Exception as e:
             logger.exception(e)

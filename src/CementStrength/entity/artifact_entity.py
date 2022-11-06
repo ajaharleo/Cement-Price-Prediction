@@ -25,3 +25,14 @@ class DataTransformationArtifact:
     preprocessed_object_file_path: Path
     is_transformed: bool
     message: str
+
+@dataclass(frozen=True)
+class ModelTrainerArtifact:
+    is_trained: bool
+    message: str
+    trained_model_file_path: Path
+    train_rmse: int or float
+    test_rmse: int or float
+    train_accuracy: int or float
+    test_accuracy: int or float
+    model_accuracy: int or float

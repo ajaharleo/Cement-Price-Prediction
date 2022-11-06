@@ -42,3 +42,21 @@ def save_object(file_path:Path,obj):
     os.makedirs(dir_path, exist_ok=True)
     with open(file_path, "wb") as file_obj:
         dill.dump(obj, file_obj)
+
+@ensure_annotations
+def load_numpy_array_data(file_path: Path) -> np.ndarray:
+    """
+    load numpy array data from file
+    file_path: str location of file to load
+    return: np.array data loaded
+    """
+    with open(file_path, 'rb') as file_obj:
+            return np.load(file_obj)
+
+@ensure_annotations
+def load_object(file_path:Path):
+    """
+    file_path: str
+    """
+    with open(file_path, "rb") as file_obj:
+        return dill.load(file_obj)

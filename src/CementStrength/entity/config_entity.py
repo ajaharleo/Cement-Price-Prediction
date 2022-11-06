@@ -23,3 +23,9 @@ class DataTransformationConfig:
     transformed_train_dir: Path
     transformed_test_dir: Path
     preprocessed_object_file_path: Path
+
+@dataclass(frozen=True)
+class ModelTrainerConfig:
+    trained_model_file_path: Path
+    base_accuracy: int or float
+    model_config_file_path: Path
