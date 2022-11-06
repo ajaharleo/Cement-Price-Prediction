@@ -134,3 +134,7 @@ dmypy.json
 #training csv file
 *.csv
 *.db
+
+#artifacts
+concrete_artifact/
+research/trials.ipynb
