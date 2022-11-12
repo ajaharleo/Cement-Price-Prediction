@@ -7,7 +7,7 @@ from CementStrength import logger
 
 class Configuration:
     def __init__(self,
-                config_file_path:str = CONFIG_FILE_PATH,
+                config_file_path:Path = CONFIG_FILE_PATH,
                 current_time_stamp:str = get_current_time_stamp()
                 ) -> None:
         self.config_info = read_yaml(config_file_path)
