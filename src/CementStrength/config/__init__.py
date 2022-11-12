@@ -1,6 +1,6 @@
 from CementStrength.constants import * 
 from CementStrength.utils import *
-from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelEvaluationConfig,ModelPusherConfig
+from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelEvaluationConfig,ModelPusherConfig,TrainingPipelineConfig
 from pathlib import Path
 import os
 from CementStrength import logger
@@ -117,7 +117,7 @@ class Configuration:
 
     def get_model_evaluation_config(self)-> ModelEvaluationConfig:
         try:
-            artifact_dir = self.training_pipeline_config.artifact_dir
+            artifact_dir = self.artifact_dir
             model_evaluation_info = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
             model_evaluation_file_path = Path(os.path.join(artifact_dir,
                                         MODEL_EVALUATION_ARTIFACT_DIR,
@@ -140,5 +140,13 @@ class Configuration:
             model_pusher_config = ModelPusherConfig(export_dir_path= export_dir_path)
             logger.info(f"Model Pusher Config : {model_pusher_config}")
             return model_pusher_config
+        except Exception as e:
+            logger.exception(e)
+
+    def get_training_pipeline_config(self)->TrainingPipelineConfig:
+        try:
+            training_pipeline_config = TrainingPipelineConfig(artifact_dir=self.artifact_dir)
+            logger.info(f"Training pipeling config: {training_pipeline_config}")
+            return training_pipeline_config
         except Exception as e:
             logger.exception(e)

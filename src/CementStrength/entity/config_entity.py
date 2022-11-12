@@ -38,3 +38,7 @@ class ModelEvaluationConfig:
 @dataclass(frozen=True)
 class ModelPusherConfig:
     export_dir_path: Path
+
+@dataclass(frozen=True)
+class TrainingPipelineConfig:
+    artifact_dir: Path

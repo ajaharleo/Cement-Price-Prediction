@@ -30,7 +30,7 @@ class ModelEvaluation:
             if not os.path.exists(model_evaluation_file_path):
                 write_yaml(file_path=model_evaluation_file_path)
                 return model
-            model_eval_file_content = read_yaml(file_path=model_evaluation_file_path)
+            model_eval_file_content = read_yaml(path_to_yaml=model_evaluation_file_path)
             model_eval_file_content = dict() if model_eval_file_content is None else model_eval_file_content
             if BEST_MODEL_KEY not in model_eval_file_content:
                 return model
@@ -42,7 +42,7 @@ class ModelEvaluation:
     def update_evaluation_report(self, model_evaluation_artifact: ModelEvaluationArtifact):
         try:
             eval_file_path = Path(self.model_evaluation_config.model_evaluation_file_path)
-            model_eval_content = read_yaml(file_path=eval_file_path)
+            model_eval_content = read_yaml(path_to_yaml=eval_file_path)
             model_eval_content = dict() if model_eval_content is None else model_eval_content
             previous_best_model = None
             if BEST_MODEL_KEY in model_eval_content:
@@ -76,7 +76,7 @@ class ModelEvaluation:
                                                            schema_file_path=schema_file_path)
             test_dataframe = load_data(file_path=test_file_path,
                                                           schema_file_path=schema_file_path)
-            schema_content = read_yaml(file_path=schema_file_path)
+            schema_content = read_yaml(path_to_yaml=schema_file_path)
             target_column_name = schema_content[SCHEMA_TARGET_COLUMN_KEY]
             logger.info(f"Converting target column into numpy array.")
             train_target_arr = np.array(train_dataframe[target_column_name])

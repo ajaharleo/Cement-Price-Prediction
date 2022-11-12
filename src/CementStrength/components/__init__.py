@@ -2,3 +2,5 @@ from CementStrength.components.data_ingestion import DataIngestion
 from CementStrength.components.data_validation import DataValidation
 from CementStrength.components.data_transformation import DataTransformation
 from CementStrength.components.model_trainer import ModelTrainer
+from CementStrength.components.model_evaluation import ModelEvaluation
+from CementStrength.components.model_pusher import ModelPusher
