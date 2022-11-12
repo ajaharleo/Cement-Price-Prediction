@@ -7,6 +7,15 @@ grid_search:
 
 model_selection:
   module_0:
+    class: LinearRegression
+    module: sklearn.linear_model
+     
+    search_param_grid:
+      fit_intercept:
+        - True
+        - False
+
+  module_1:
     class: Ridge
     module: sklearn.linear_model
      
@@ -25,7 +34,70 @@ model_selection:
         - 40
         - 80
 
-  module_1:
+  module_2:
+    class: Lasso
+    module: sklearn.linear_model
+     
+    search_param_grid:
+      fit_intercept:
+        - True
+        - False
+      alpha:
+        - 0.00000001
+        - 0.0001
+        - 0.01
+        - 1
+        - 5
+        - 10
+        - 20
+        - 40
+        - 80
+
+  module_3:
+    class: ElasticNet
+    module: sklearn.linear_model
+     
+    search_param_grid:
+      fit_intercept:
+        - True
+        - False
+      alpha:
+        - 0.00000001
+        - 0.0001
+        - 0.01
+        - 1
+        - 5
+        - 10
+        - 20
+        - 40
+        - 80
+
+      l1_ratio:
+        - 0.00000000001
+        - 0.000001
+        - 0.001
+        - 1
+        - 5
+        - 10
+        - 20
+        - 50
+        - 70
+        - 80
+        - 100
+
+  module_4:
+    class: DecisionTreeRegressor
+    module: sklearn.tree
+
+    search_param_grid:
+      min_samples_leaf:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+
+  module_5:
     class: RandomForestRegressor
     module: sklearn.ensemble
 
@@ -43,7 +115,7 @@ model_selection:
         - 15
         - 25
                                      
-  module_2:
+  module_6:
     class: GradientBoostingRegressor
     module: sklearn.ensemble
 
