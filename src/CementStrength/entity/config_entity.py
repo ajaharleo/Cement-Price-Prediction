@@ -29,3 +29,12 @@ class ModelTrainerConfig:
     trained_model_file_path: Path
     base_accuracy: int or float
     model_config_file_path: Path
+
+@dataclass(frozen=True)
+class ModelEvaluationConfig:
+    model_evaluation_file_path: Path
+    time_stamp: any
+
+@dataclass(frozen=True)
+class ModelPusherConfig:
+    export_dir_path: Path

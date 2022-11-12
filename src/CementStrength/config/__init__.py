@@ -1,6 +1,6 @@
 from CementStrength.constants import * 
 from CementStrength.utils import *
-from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig
+from CementStrength.entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelEvaluationConfig,ModelPusherConfig
 from pathlib import Path
 import os
 from CementStrength import logger
@@ -112,5 +112,33 @@ class Configuration:
                                     model_config_file_path=model_config_file_path)
             logger.info(f"Model Trainer Config: {model_trainer_config}")
             return model_trainer_config                 
+        except Exception as e:
+            logger.exception(e)
+
+    def get_model_evaluation_config(self)-> ModelEvaluationConfig:
+        try:
+            artifact_dir = self.training_pipeline_config.artifact_dir
+            model_evaluation_info = self.config_info[MODEL_EVALUATION_CONFIG_KEY]
+            model_evaluation_file_path = Path(os.path.join(artifact_dir,
+                                        MODEL_EVALUATION_ARTIFACT_DIR,
+                                        model_evaluation_info[MODEL_EVALUATION_FILE_NAME_KEY]))
+            model_evaluation_config = ModelEvaluationConfig(
+                                    model_evaluation_file_path=model_evaluation_file_path,
+                                    time_stamp=self.time_stamp)
+            logger.info(f"Model Evaluation Config: {model_evaluation_config}")
+            return model_evaluation_config
+        except Exception as e:
+            logger.exception(e)
+
+    def get_model_pusher_config(self)-> ModelPusherConfig:
+        try:
+            time_stamp = f"{datetime.now().strftime('%Y%m%d%H%M%S')}"
+            model_pusher_info = self.config_info[MODEL_PUSHER_CONFIG_KEY]
+            export_dir_path = Path(os.path.join(ROOT_DIR,
+                                           model_pusher_info[MODEL_PUSHER_EXPORT_DIR_KEY],
+                                           time_stamp))
+            model_pusher_config = ModelPusherConfig(export_dir_path= export_dir_path)
+            logger.info(f"Model Pusher Config : {model_pusher_config}")
+            return model_pusher_config
         except Exception as e:
             logger.exception(e)

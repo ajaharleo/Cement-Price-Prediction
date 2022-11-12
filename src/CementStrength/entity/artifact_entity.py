@@ -36,3 +36,13 @@ class ModelTrainerArtifact:
     train_accuracy: int or float
     test_accuracy: int or float
     model_accuracy: int or float
+
+@dataclass(frozen=True)
+class ModelEvaluationArtifact:
+    is_model_accepted: bool
+    evaluated_model_path: Path
+
+@dataclass(frozen=True)
+class ModelPusherArtifact:
+    is_model_pusher: bool
+    export_model_file_path: Path

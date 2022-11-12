@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import dill
+from CementStrength import logger
 
 @ensure_annotations
 def load_data(file_path:Path, schema_file_path:Path)-> pd.DataFrame:
@@ -60,3 +61,18 @@ def load_object(file_path:Path):
     """
     with open(file_path, "rb") as file_obj:
         return dill.load(file_obj)
+
+@ensure_annotations
+def write_yaml(file_path:Path,data:dict=None):
+    """
+    Create yaml file 
+    file_path: str
+    data: dict
+    """
+    try:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path,"w") as yaml_file:
+            if data is not None:
+                yaml.dump(data,yaml_file)
+    except Exception as e:
+        logger.exception(e)
