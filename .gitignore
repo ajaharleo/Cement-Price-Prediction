@@ -138,3 +138,4 @@ dmypy.json
 #artifacts
 concrete_artifact/
 research/trials.ipynb
+saved_models/
