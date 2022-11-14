@@ -1,9 +1,10 @@
 import os,sys
 import logging
 from CementStrength.constants import *
+import pandas as pd
 
 
-logging_str = "[%(asctime)s: %(levelname)s: %(module)s:%(lineno)d:%(filename)s:%(funcName)s]: %(message)s"
+logging_str = '[%(asctime)s]^;%(levelname)s^;%(lineno)d^;%(filename)s^;%(funcName)s()^;%(message)s'
 log_dir = "logs"
 log_filepath = os.path.join(log_dir, f"log_{get_current_time_stamp()}.log")
 os.makedirs(log_dir, exist_ok=True)
@@ -25,7 +26,7 @@ def get_log_dataframe(file_path:Path):
             data.append(line.split("^;"))
 
     log_df = pd.DataFrame(data)
-    columns=["Time stamp","Log Level","Module","line number","file name","function name","message"]
+    columns=["Time stamp","Log Level","line number","file name","function name","message"]
     log_df.columns=columns
     
     log_df["log_message"] = log_df['Time stamp'].astype(str) +":$"+ log_df["message"]
