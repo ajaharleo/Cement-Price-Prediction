@@ -1,3 +1,4 @@
-env/
-.git/
+.git
 .gitignore
+.env
+.vevn
