@@ -35,7 +35,6 @@ SCHEMA_DOMAIN_VALUE_KEY = 'domain_value'
 #Data Transformation related variables
 DATA_TRANSFORMATION_CONFIG_KEY = 'data_transformation_config'
 DATA_TRANSFORMATION_ARTIFACT_DIR = 'data_transformation'
-DATA_TRANSFORMATION_ADD_BEDROOM_KEY = 'add_bedroom_per_room'
 DATA_TRANSFORMATION_TRANSFORMED_DIR_KEY = 'transformed_dir'
 DATA_TRANSFORMATION_TRANSFORMED_TRAIN_DIR_KEY = "transformed_train_dir"
 DATA_TRANSFORMATION_TRANSFORMED_TEST_DIR_KEY = "transformed_test_dir"

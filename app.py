@@ -10,8 +10,8 @@ from pathlib import Path
 from CementStrength.config import Configuration
 from CementStrength.constants import *
 from CementStrength.pipeline import Pipeline
-from CementStrength.entity.concrete_predictor import ConcretePredictor, ConcreteData
-from flask import send_file, abort, render_template
+from CementStrength.entity import ConcretePredictor, ConcreteData
+from flask import send_file, abort, render_template,send_from_directory
 CONFIG_DIR = os.path.dirname(CONFIG_FILE_PATH)
 
 ROOT_DIR = os.getcwd()
@@ -29,6 +29,13 @@ CONCRETE_COMPRESSIVE_STRENGTH_KEY = "concrete_compressive_strength"
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        logger.exception(e)
+
 
 @app.route('/concrete_artifact', defaults={'req_path': 'concrete_artifact'})
 @app.route('/concrete_artifact/<path:req_path>')
@@ -40,7 +47,7 @@ def render_artifact_dir(req_path):
         abs_path = os.path.join(req_path)
         # Return 404 if path doesn't exist
         if not os.path.exists(abs_path):
-            return abort(404)
+            return render_template('error.html')
 
         # Check if path is a file and serve
         if os.path.isfile(abs_path):
@@ -50,8 +57,7 @@ def render_artifact_dir(req_path):
                     for line in file.readlines():
                         content = f"{content}{line}"
                     return content
-            return send_file(abs_path)
-
+            return send_from_directory(abs_path)
         # Show directory contents
         files = {os.path.join(abs_path, file_name): file_name for file_name in os.listdir(abs_path) if
                 "artifact" in os.path.join(abs_path, file_name)}
@@ -61,26 +67,8 @@ def render_artifact_dir(req_path):
             "parent_folder": os.path.dirname(abs_path),
             "parent_label": abs_path
         }
+        logger.info(f"artifact results : {result}")
         return render_template('files.html', result=result)
-    except Exception as e:
-        logger.exception(e)
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    try:
-        return render_template('index.html')
-    except Exception as e:
-        logger.exception(e)
-
-
-@app.route('/view_experiment_hist', methods=['GET', 'POST'])
-def view_experiment_history():
-    try:
-        experiment_df = Pipeline.get_experiments_status()
-        context = {
-            "experiment": experiment_df.to_html(classes='table table-striped col-12')
-        }
-        return render_template('experiment_history.html', context=context)
     except Exception as e:
         logger.exception(e)
 
@@ -139,7 +127,7 @@ def predict():
         return render_template("predict.html", context=context)
     except Exception as e:
         logger.exception(e)
-
+        
 @app.route('/saved_models', defaults={'req_path': 'saved_models'})
 @app.route('/saved_models/<path:req_path>')
 def saved_models_dir(req_path):
@@ -151,7 +139,7 @@ def saved_models_dir(req_path):
         print(abs_path)
         # Return 404 if path doesn't exist
         if not os.path.exists(abs_path):
-            return abort(404)
+            return render_template('error.html') 
 
         # Check if path is a file and serve
         if os.path.isfile(abs_path):
@@ -165,9 +153,57 @@ def saved_models_dir(req_path):
             "parent_folder": os.path.dirname(abs_path),
             "parent_label": abs_path
         }
+        logger.info(f"saved templets results : {result}")
         return render_template('saved_models_files.html', result=result)
     except Exception as e:
         logger.exception(e)
+
+@app.route(f'/logs', defaults={'req_path': f'{LOG_FOLDER_NAME}'})
+@app.route(f'/{LOG_FOLDER_NAME}/<path:req_path>')
+def render_log_dir(req_path):
+    try:
+        os.makedirs(LOG_FOLDER_NAME, exist_ok=True)
+        # Joining the base and the requested path
+        logger.info(f"req_path: {req_path}")
+        abs_path = os.path.join(req_path)
+        print(abs_path)
+        logger.info(f"req_path: {req_path}")
+        # Return 404 if path doesn't exist
+        if not os.path.exists(abs_path):
+            return render_template('error.html')
+    # Check if path is a file and serve
+        if os.path.isfile(abs_path):
+            log_df = get_log_dataframe(Path(abs_path))
+            logger.info(log_df.head())
+            context = {"log": log_df.to_html(classes="table-striped", index=False)}
+            return render_template('log.html', context=context)
+
+        
+
+        # Show directory contents
+        files = {os.path.join(abs_path, file): file for file in os.listdir(abs_path)}
+
+        result = {
+            "files": files,
+            "parent_folder": os.path.dirname(abs_path),
+            "parent_label": abs_path
+        }
+        logger.info(f"logs results : {result}")
+        return render_template('log_files.html', result=result)
+    except Exception as e:
+        logger.exception(e)
+
+@app.route('/view_experiment_hist', methods=['GET', 'POST'])
+def view_experiment_history():
+    try:
+        experiment_df = Pipeline.get_experiments_status()
+        context = {
+            "experiment": experiment_df.to_html(classes='table table-striped col-12')
+        }
+        return render_template('experiment_history.html', context=context)
+    except Exception as e:
+        logger.exception(e)
+
 
 @app.route("/update_model_config", methods=['GET', 'POST'])
 def update_model_config():
@@ -183,39 +219,6 @@ def update_model_config():
         model_config = read_yaml(path_to_yaml=Path(MODEL_CONFIG_FILE_PATH))
         return render_template('update_model.html', result={"model_config": model_config})
 
-    except Exception as e:
-        logger.exception(e)
-
-
-@app.route(f'/logs', defaults={'req_path': f'{LOG_FOLDER_NAME}'})
-@app.route(f'/{LOG_FOLDER_NAME}/<path:req_path>')
-def render_log_dir(req_path):
-    try:
-        os.makedirs(LOG_FOLDER_NAME, exist_ok=True)
-        # Joining the base and the requested path
-        logger.info(f"req_path: {req_path}")
-        abs_path = os.path.join(req_path)
-        print(abs_path)
-        # Return 404 if path doesn't exist
-        if not os.path.exists(abs_path):
-            return abort(404)
-    # Check if path is a file and serve
-        if os.path.isfile(abs_path):
-            log_df = get_log_dataframe(abs_path)
-            context = {"log": log_df.to_html(classes="table-striped", index=False)}
-            return render_template('log.html', context=context)
-
-        
-
-        # Show directory contents
-        files = {os.path.join(abs_path, file): file for file in os.listdir(abs_path)}
-
-        result = {
-            "files": files,
-            "parent_folder": os.path.dirname(abs_path),
-            "parent_label": abs_path
-        }
-        return render_template('log_files.html', result=result)
     except Exception as e:
         logger.exception(e)
 

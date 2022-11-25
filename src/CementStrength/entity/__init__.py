@@ -1,3 +1,4 @@
 from CementStrength.entity.config_entity import (DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig,ModelEvaluationConfig,ModelPusherConfig,TrainingPipelineConfig)
 from CementStrength.entity.artifact_entity import (DataIngestionArtifact,DataValidationArtifact,DataTransformationArtifact,ModelTrainerArtifact,ModelEvaluationArtifact,ModelPusherArtifact)
 from CementStrength.entity.model_factory import *
+from CementStrength.entity.concrete_predictor import ConcretePredictor, ConcreteData

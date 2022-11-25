@@ -83,8 +83,17 @@ def evaluate_regression_model(model_list: list,
         for model in model_list:
             model_name = str(model)  #getting model name based on model object
             logger.info(f"{'>>'*30}Started evaluating model: [{type(model).__name__}] {'<<'*30}")
-            y_train_pred = model.predict(X_train)
-            y_test_pred = model.predict(X_test)
+            try:
+                logger.info(f'{"-+-"*30} best_model parameter:{model.best_model} {"-+-"*30}  ')
+                #Getting prediction for training and testing dataset
+                best_model = model.best_model
+                y_train_pred = best_model.predict(X_train)
+                y_test_pred = best_model.predict(X_test)
+            except:
+                best_model = model
+                y_train_pred = best_model.predict(X_train)
+                y_test_pred = best_model.predict(X_test)
+
             train_acc = r2_score(y_train, y_train_pred)
             test_acc = r2_score(y_test, y_test_pred)
             train_rmse = np.sqrt(mean_squared_error(y_train, y_train_pred))
@@ -101,7 +110,7 @@ def evaluate_regression_model(model_list: list,
             if model_accuracy >= base_accuracy and diff_test_train_acc < 0.10:
                 base_accuracy = model_accuracy
                 metric_info_artifact = MetricInfoArtifact(model_name=model_name,
-                                                          model_object=model,
+                                                          model_object=best_model,
                                                           train_rmse=train_rmse,
                                                           test_rmse=test_rmse,
                                                           train_accuracy=train_acc,

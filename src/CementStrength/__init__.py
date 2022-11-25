@@ -21,14 +21,16 @@ logger = logging.getLogger("CementStrengthLogger")
 
 def get_log_dataframe(file_path:Path):
     data=[]
-    with open(file_path) as log_file:
-        for line in log_file.readlines():
-            data.append(line.split("^;"))
+    if os.path.getsize(file_path):
+        with open(file_path) as log_file:
+            for line in log_file.readlines():
+                data.append(line.split("^;"))
 
-    log_df = pd.DataFrame(data)
-    columns=["Time stamp","Log Level","line number","file name","function name","message"]
-    log_df.columns=columns
-    
-    log_df["log_message"] = log_df['Time stamp'].astype(str) +":$"+ log_df["message"]
-
-    return log_df[["log_message"]]
+        log_df = pd.DataFrame(data)
+        columns=["Time stamp","Log Level","line number","file name","function name","message"]
+        log_df.columns=columns
+        
+        log_df["log_message"] = log_df['file name'].astype(str)+'>>>>>Line no:'+log_df['line number'].astype(str)+'>>>>>'+log_df['Time stamp'].astype(str) +":$"+ log_df["message"]
+        return log_df[["log_message"]]
+    else:
+        return pd.DataFrame(['NO DATA IN THE LOG FILE!!!! PLEASE CHECK ANOTHER FILE.'])
