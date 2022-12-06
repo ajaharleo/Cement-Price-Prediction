@@ -15,7 +15,7 @@ Deployment link: [https://concrete-strength-prediction1.herokuapp.com/](https://
 
 
 ## Overview
-This is End to End machine learning Regression project which takes information related to components in concrete mixture as input and predict the compressive strength of the mixture. The dataset used for model training is from kaggle.Dataset contains 1030 entries of data of various items , 8 independent features of item and 1 sales as output feature.
+This is End to End machine learning Regression project which takes information related to components in concrete mixture as input and predict the compressive strength of the mixture. The dataset used for model training is from kaggle.Dataset contains 1030 entries of data of various items , 8 independent features of item and Compressive_strength as output feature.
 
 ## Problem Statement:
 The quality of concrete is determined by its compressive strength, which is measured 
